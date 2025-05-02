@@ -1,9 +1,9 @@
-# Lab 01 - Sorting and Searching Using Functions and Header Files
+# Lab 01 - Searching and Sorting
 
 ## Question 1: Sorting Program
 
 **Task**:  
-Write a menu-driven C++ program to sort a given array in ascending order using:
+Write a C++ menu-driven program to sort a given array in ascending order. Design proper functions, maintain boundary conditions, and follow coding best practices. The menus are as follows,
 - Bubble Sort
 - Selection Sort
 - Insertion Sort
@@ -17,6 +17,7 @@ Write a menu-driven C++ program to sort a given array in ascending order using:
   - **Insertion Sort**: Inserts each element in its correct position in a sorted portion of the array.
 
 ### Sample Output:
+```
 Menu
 1.Selection Sort
 2.Bubble Sort
@@ -25,16 +26,15 @@ Menu
 Enter your choice: 2
 Enter the number of elements in array: 5
 10 5 3 8 1
-1 3 5 8 10
-
+1 3 5 8 10 
+```
 
 ---
 
 ## Question 2: Search Program Using Header File
 
 **Task**:  
-Convert the sorting program into a header file and include it in a new C++ file.  
-Write a menu-driven C++ program for:
+ Convert the sorting program into a header file and include it into a new cpp file. Write a C++ menu-driven program for linear and binary search in this new cpp file. Utilize any of the sorting functions in the included header file to sort the input array before performing a binary search. Design proper functions, maintain boundary conditions and follow coding best practices. The menu-driven program supports:
 - Linear Search
 - Binary Search (after sorting)
 - Exit
@@ -45,6 +45,7 @@ Write a menu-driven C++ program for:
 - **Binary Search**: Sorts the array using bubble sort, then applies binary search using the divide-and-conquer method.
 
 ### Sample Output:
+```
 Enter the number of elements in array: 5
 10 5 3 8 1
 Enter the element to be searched: 8
@@ -54,7 +55,7 @@ Menu
 3.Exit
 Enter your choice: 1
 The element is found at: 3
-
+```
 
 ---
 
@@ -63,3 +64,14 @@ The element is found at: 3
 - `1_A.cpp` – Sorting using menu
 - `1_B.cpp` – Search program using header file
 - `1_B_header.h` – Header file with sorting functions
+
+## Compilation Instructions
+
+1. Open your terminal and navigate to the folder where the `.cpp` file is stored.
+2. Compile and run the program using:
+
+```
+g++ -o objectfilename filename.cpp
+./objectfilename
+```
+

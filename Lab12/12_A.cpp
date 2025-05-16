@@ -1,179 +1,129 @@
-// Program to perform the operations of Graph ADT - Adjacent Matrix Implementation
-#include <stdio.h>
-#include <stdlib.h>
-
-#define MAX 100
-
-typedef struct Node {
-    int vertex;
-    struct Node* next;
-} Node;
-
-Node* createNode(int vertex) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    if (!newNode) {
-        printf("Memory allocation failed!\n");
-        exit(1);
-    }
-    newNode->vertex = vertex;
-    newNode->next = NULL;
-    return newNode;
-}
-
-class Graph {
-private:
-    int numVertices;
-    Node* adjList[MAX];
-
-public:
-    Graph(int vertices) {
-        numVertices = vertices;
-        for (int i = 0; i < vertices; i++) {
-            adjList[i] = NULL;
+// Implement adjacency matrix
+#include<cstdio>
+#include<cstdlib>
+class AdjMatrix{
+    private:
+        int size;
+        int** matrix;
+    public:
+        AdjMatrix(int n){
+            size = n;
+            matrix = (int**)malloc(size * sizeof(int* ));
+            for(int i =0;i<size;i++){
+                matrix[i] = (int*)malloc(size * sizeof(int));
+                for(int j =0;j<size;j++){
+                    matrix[i][j]=0;
+                }
+            }
         }
-    }
-
-    void insertEdge(int src, int dest);
-    void deleteEdge(int src, int dest);
-    void searchEdge(int src, int dest);
-    void displayGraph();
-
+        ~AdjMatrix() {
+            for (int i = 0; i < size; i++)
+                free(matrix[i]);
+            free(matrix);
+        }
+        void display();
+        void insertEdge(int src,int dest);
+        void deleteEdge(int src,int dest);
+        int searchEdge(int src,int dest);
+        bool validIndex(int idx);
 };
-
 int main() {
-    int choice, src, dest, vertices;
+    int sizeArr;
+    printf("Enter number of nodes: ");
+    scanf("%d", &sizeArr);
 
-    printf("Enter the number of vertices in the graph: ");
-    scanf("%d", &vertices);
-
-    if (vertices <= 0 || vertices > MAX) {
-        printf("Invalid number of vertices! Must be between 1 and %d.\n", MAX);
-        return 1;
-    }
-
-    Graph g(vertices);  
+    AdjMatrix graph(sizeArr);
+    int choice, src, dest,res;
 
     while (1) {
-        printf("\nGraph ADT Menu\n1.Insert Edge\n2.Delete Edge\n3.Search Edge\n4.Display Graph\n5.Exit");
+        printf("\nMenu:\n");
+        printf("1. Insert Edge\n");
+        printf("2. Delete Edge\n");
+        printf("3. Search Edge\n");
+        printf("4. Display Matrix\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                printf("Enter source and destination vertices: ");
-                scanf("%d %d", &src, &dest);
-                g.insertEdge(src, dest);  
+                printf("Enter source and destination: ");
+                scanf("%d%d", &src, &dest);
+                graph.insertEdge(src, dest);
                 break;
             case 2:
-                printf("Enter source and destination vertices: ");
-                scanf("%d %d", &src, &dest);
-                g.deleteEdge(src, dest);  
+                printf("Enter source and destination: ");
+                scanf("%d%d", &src, &dest);
+                graph.deleteEdge(src, dest);
                 break;
             case 3:
-                printf("Enter source and destination vertices: ");
-                scanf("%d %d", &src, &dest);
-                g.searchEdge(src, dest);  
+                printf("Enter source and destination: ");
+                scanf("%d%d", &src, &dest);
+                res = graph.searchEdge(src, dest);
+                if(res==1){
+                    printf("No edge exists between %d and %d.\n", src, dest);
+                }else if(res == 2){
+                    printf("Invalid node indices.\n");
+                }
                 break;
             case 4:
-                g.displayGraph();  
+                graph.display();
                 break;
             case 5:
-                printf("Exiting program...\n");
-                //g.freeGraph();  
+                printf("Exiting...\n");
                 return 0;
             default:
-                printf("Invalid choice! Please select between 1 to 5.\n");
+                printf("Invalid choice.\n");
         }
-    } 
-
+    }
+}
+// Function to check if the vertex is valid
+bool AdjMatrix::validIndex(int idx) {
+    return (idx >= 0 && idx < size);
 }
 
-// Inserts an edge between two vertices in the Graph
-void Graph::insertEdge(int src, int dest) {
-    if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
-        printf("Invalid vertices!\n");
-        return;
+// Function to display matrix
+void AdjMatrix::display() {
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++)
+            printf("%d ", matrix[i][j]);
+        printf("\n");
     }
-
-    Node* newNode = createNode(dest);
-    newNode->next = adjList[src];
-    adjList[src] = newNode;
-
-    newNode = createNode(src);
-    newNode->next = adjList[dest];
-    adjList[dest] = newNode;
-
-    printf("Edge inserted between %d and %d.\n", src, dest);
 }
 
-// Deletes an edge between two vertices in the Graph
-void Graph::deleteEdge(int src, int dest) {
-    if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
-        printf("Invalid vertices!\n");
-        return;
-    }
-
-    Node* temp = adjList[src];
-    Node* prev = NULL;
-
-    while (temp != NULL && temp->vertex != dest) {
-        prev = temp;
-        temp = temp->next;
-    }
-    if (temp != NULL) {
-        if (prev != NULL)
-            prev->next = temp->next;
-        else
-            adjList[src] = temp->next;
-        free(temp);
-    }
-
-    temp = adjList[dest];
-    prev = NULL;
-    while (temp != NULL && temp->vertex != src) {
-        prev = temp;
-        temp = temp->next;
-    }
-    if (temp != NULL) {
-        if (prev != NULL)
-            prev->next = temp->next;
-        else
-            adjList[dest] = temp->next;
-        free(temp);
-    }
-
-    printf("Edge deleted between %d and %d.\n", src, dest);
-}
-
-// Searches for an edge in the Graph
-void Graph::searchEdge(int src, int dest) {
-    if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
-        printf("Invalid vertices!\n");
-        return;
-    }
-
-    Node* temp = adjList[src];
-    while (temp != NULL) {
-        if (temp->vertex == dest) {
+// Function to search if edge exists between two vertex
+int AdjMatrix::searchEdge(int src, int dest) {
+    if (validIndex(src) && validIndex(dest)) {
+        if (matrix[src][dest]){
             printf("Edge exists between %d and %d.\n", src, dest);
-            return;
+            return 0;
         }
-        temp = temp->next;
-    }
-    printf("No edge exists between %d and %d.\n", src, dest);
-}
-
-//Displays the graph as an Adjacent Matrix
-void Graph::displayGraph() {
-    printf("\nAdjacency List:\n");
-    for (int v = 0; v < numVertices; v++) {
-        Node* temp = adjList[v];
-        printf("%d -> ", v);
-        while (temp) {
-            printf("%d -> ", temp->vertex);
-            temp = temp->next;
+        else{
+            return 1;
         }
-        printf("NULL\n");
+    }else {
+        return 2;
     }
 }
+// Function to delete edge between 2 vertex
+void AdjMatrix::deleteEdge(int src, int dest) {
+    if (validIndex(src) && validIndex(dest)) {
+        matrix[src][dest] = 0;
+        matrix[dest][src] = 0; 
+        printf("Edge deleted between %d and %d.\n", src, dest);
+    } else {
+        printf("Invalid node indices.\n");
+    }
+}
 
+// Function to insert edge between 2 vertex
+void AdjMatrix::insertEdge(int src, int dest) {
+    if (validIndex(src) && validIndex(dest)) {
+        matrix[src][dest] = 1;
+        matrix[dest][src] = 1; 
+        printf("Edge inserted between %d and %d.\n", src, dest);
+    } else {
+        printf("Invalid node indices.\n");
+    }
+}
